@@ -1,5 +1,7 @@
 import { Router } from "express";
 import CartManager from "../dao/manager/cartManager.js";
+import cartsModel from "../dao/models/cart.js";
+
 
 const cartRouter = Router();
 const cartManagerInstance = new CartManager();
@@ -16,7 +18,7 @@ cartRouter.post("/", async (req, res) => {
 cartRouter.get("/:cid", async (req, res) => {
     const { cid } = req.params;
     try {
-        const cart = await cartsModel.findById(cid).populate('products.product');
+        const cart = await cartsModel.findById(cid).populate('products.product'); // Usa el modelo cartsModel
         if (!cart) {
             return res.status(404).send("Carrito no encontrado");
         }

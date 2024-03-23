@@ -3,6 +3,9 @@ import express from "express"
 import mongoose from "mongoose"
 import __dirname from "./utils.js"
 import handlebars from "express-handlebars"
+import { productRouter } from "./routes/productRouter.js"
+import { cartRouter } from "./routes/cartRouter.js"
+import messagesModel from "./dao/models/message.js"
 
 const app = express()
 const port = process.env.port || 8080
@@ -15,9 +18,12 @@ app.set('view engine', 'handlebars')
 app.set('views',__dirname+'/views')
 app.use(express.static(__dirname+'/public'))
 
+app.use("/api/products", productRouter)
+app.use("/api/carts", cartRouter); 
+
 
 const connectMongoDB = async () => {
-    const DB_URL = "mongodb+srv://dan13l:dani06011998@cluster0.pm7efvk.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    const DB_URL = "mongodb+srv://dan13l:dani06011998@cluster0.pm7efvk.mongodb.net/ecommerce";
     try{
         await mongoose.connect(DB_URL)
         console.log("mongodb conectado")
@@ -46,3 +52,6 @@ io.on("connection", (socket) => {
         }
     });
 });
+
+
+
