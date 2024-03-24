@@ -1,19 +1,44 @@
 import express from "express";
 import ProductManager from "../dao/manager/productManager.js";
+import Product from "../dao/models/product.js";
 
 const productRouter = express.Router();
 const productManager = new ProductManager();
 
-productRouter.get("/", async (req, res) => {
+productRouter.get("/list", async (req, res) => {
     try {
-        const { limit } = req.query;
-        const products = await productManager.readProducts();
+        const { limit = 10, page = 1, sort, query } = req.query;
 
-        if (limit) {
-            const limitedProducts = products.slice(0, limit);
-            return res.json(limitedProducts);
-        }
-        return res.json(products);
+        const filter = query ? { $text: { $search: query } } : {};
+        const sortOption = sort === 'desc' ? { price: -1 } : { price: 1 };
+
+        const options = {
+            limit: parseInt(limit),
+            page: parseInt(page),
+            sort: sortOption
+        };
+
+        const result = await Product.paginate(filter, options);
+
+        const totalPages = Math.ceil(result.totalDocs / limit);
+        const hasPrevPage = result.hasPrevPage;
+        const hasNextPage = result.hasNextPage;
+
+        const prevLink = hasPrevPage ? `/products?limit=${limit}&page=${page - 1}` : null;
+        const nextLink = hasNextPage ? `/products?limit=${limit}&page=${page + 1}` : null;
+
+        res.json({
+            status: 'success',
+            payload: result.docs,
+            totalPages: totalPages,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: page,
+            hasPrevPage: hasPrevPage,
+            hasNextPage: hasNextPage,
+            prevLink: prevLink,
+            nextLink: nextLink
+        });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error al recibir productos");
