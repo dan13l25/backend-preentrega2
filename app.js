@@ -22,8 +22,16 @@ app.use("/api/products", productRouter)
 app.use("/api/carts", cartRouter); 
 
 app.get("/", (req,res) =>{
-    res.render("home")
+    res.render("product")
 })
+
+app.get("/chat", (req, res) => {
+    res.render("chat");
+});
+
+/*app.get("/product", (req, res) => {
+    res.render("product");
+});*/
 
 const connectMongoDB = async () => {
     const DB_URL = "mongodb+srv://dan13l:dani06011998@cluster0.pm7efvk.mongodb.net/ecommerce";

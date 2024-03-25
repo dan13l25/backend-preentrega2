@@ -5,7 +5,7 @@ import Product from "../dao/models/product.js";
 const productRouter = express.Router();
 const productManager = new ProductManager();
 
-productRouter.get("/list", async (req, res) => {
+productRouter.get("/", async (req, res) => {
     try {
         const { limit = 10, page = 1, sort, query } = req.query;
 
@@ -18,15 +18,17 @@ productRouter.get("/list", async (req, res) => {
             sort: sortOption
         };
 
+        // Utiliza el método paginate() del modelo Product para obtener los productos paginados
         const result = await Product.paginate(filter, options);
 
+        // Calcula la cantidad total de páginas
         const totalPages = Math.ceil(result.totalDocs / limit);
-        const hasPrevPage = result.hasPrevPage;
-        const hasNextPage = result.hasNextPage;
+        
+        // Construye los enlaces de paginación
+        const prevLink = result.hasPrevPage ? `/products?limit=${limit}&page=${result.prevPage}` : null;
+    const nextLink = result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null;
 
-        const prevLink = hasPrevPage ? `/products?limit=${limit}&page=${page - 1}` : null;
-        const nextLink = hasNextPage ? `/products?limit=${limit}&page=${page + 1}` : null;
-
+        // Envía la respuesta con los datos paginados
         res.json({
             status: 'success',
             payload: result.docs,
@@ -34,8 +36,8 @@ productRouter.get("/list", async (req, res) => {
             prevPage: result.prevPage,
             nextPage: result.nextPage,
             page: page,
-            hasPrevPage: hasPrevPage,
-            hasNextPage: hasNextPage,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
             prevLink: prevLink,
             nextLink: nextLink
         });
@@ -71,7 +73,7 @@ productRouter.get("/brand/:brand", async (req, res) => {
     }
 });
 
-productRouter.post("/post", async (req, res) => {
+productRouter.post("/", async (req, res) => {
     try {
         const { title, description, price, thumbnail, code, stock, status = true, category, brand } = req.body; 
         const product = await productManager.addProduct(title, description, price, thumbnail, code, stock, status, category, brand); 
