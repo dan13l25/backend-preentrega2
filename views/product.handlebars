@@ -1,22 +1,10 @@
 <h2>Lista de productos</h2>
 
- {{#each payload}}
-    <div>
-        <h2>{{title}}</h2>
-        <p>{{description}}</p>
-        <p>Código: {{code}}</p>
-        <p>Categoría: {{category}}</p>
-        <p>Marca: {{brand}}</p>
-        <p>Precio: {{price}}</p>
-        <p>Stock: {{stock}}</p>
-        <p>Estado: {{status}}</p>
-        <p>Miniaturas: {{thumbnails}}</p>
-    </div>
-{{/each}}
-
-{{#if hasPrevPage}}
-    <a href="{{prevLink}}">Página anterior</a>
-{{/if}}
-{{#if hasNextPage}}
-    <a href="{{nextLink}}">Página siguiente</a>
-{{/if}}
+  {{#each products}}
+        <div>
+            <h2>{{this.title}}</h2>
+            <p>Description: {{this.description}}</p>
+            <p>Price: ${{this.price}}</p>
+            <!-- Agrega más detalles del producto según sea necesario -->
+        </div>
+    {{/each}}
