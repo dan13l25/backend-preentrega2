@@ -53,19 +53,15 @@ const productManager = new ProductManager();
 productRouter.get("/", async (req, res) => {
     try {
         const { limit } = req.query;
-        const products = await Product.paginate({},{limit:4});
+        const queryOptions = limit ? { limit: parseInt(limit, 10) } : {};
+        const products = await Product.paginate({}, queryOptions);
 
-        if (limit) {
-            const limitedProducts = products.slice(0, limit);
-            return res.json(limitedProducts);
-        }
         return res.json(products);
     } catch (error) {
         console.error(error);
         res.status(500).send("Error al recibir productos");
     }
 });
-
 productRouter.get("/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
