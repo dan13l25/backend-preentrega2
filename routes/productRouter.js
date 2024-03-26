@@ -52,9 +52,9 @@ const productManager = new ProductManager();
 
 productRouter.get("/", async (req, res) => {
     try {
-        const { limit } = req.query;
-        const queryOptions = limit ? { limit: parseInt(limit, 10) } : {};
-        const products = await Product.paginate({}, queryOptions);
+        const  limit  = req.query.limit || 5;
+        const page =  req.query.page || 1;
+        const products = await Product.paginate({}, {limit, page});
 
         return res.json(products);
     } catch (error) {

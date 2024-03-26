@@ -39,7 +39,11 @@ const productSchema = new Schema({
     thumbnails: {
         type: [String],
         required: true
-    }
+    },
+    cart: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'cartsModel'
+    },
 });
 
 productSchema.plugin(mongoosePaginate)
