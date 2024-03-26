@@ -5,7 +5,7 @@ import Product from "../dao/models/product.js";
 const productRouter = express.Router();
 const productManager = new ProductManager();
 
-productRouter.get("/", async (req, res) => {
+/*productRouter.get("/", async (req, res) => {
     try {
         const { limit = 10, page = 1, sort, query } = req.query;
 
@@ -26,7 +26,7 @@ productRouter.get("/", async (req, res) => {
         
         // Construye los enlaces de paginación
         const prevLink = result.hasPrevPage ? `/products?limit=${limit}&page=${result.prevPage}` : null;
-    const nextLink = result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null;
+        const nextLink = result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null;
 
         // Envía la respuesta con los datos paginados
         res.json({
@@ -41,6 +41,25 @@ productRouter.get("/", async (req, res) => {
             prevLink: prevLink,
             nextLink: nextLink
         });
+        console.log(options)
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error al recibir productos");
+    }
+});*/
+
+//otro metodo get
+
+productRouter.get("/", async (req, res) => {
+    try {
+        const { limit } = req.query;
+        const products = await Product.paginate({},{limit:4});
+
+        if (limit) {
+            const limitedProducts = products.slice(0, limit);
+            return res.json(limitedProducts);
+        }
+        return res.json(products);
     } catch (error) {
         console.error(error);
         res.status(500).send("Error al recibir productos");
