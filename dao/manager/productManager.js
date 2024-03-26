@@ -4,6 +4,7 @@ export default class ProductManager {
     constructor() {
         console.log("productmanager funciona") 
     }
+    
 
     addProduct = async (title, description, price, thumbnails, code, stock, status, category, brand) => {
         try {
@@ -35,11 +36,28 @@ export default class ProductManager {
         }
     };
 
-    getProduct = async () => {
+    getProducts = async ({ category, brand, sort }) => {
         try {
-            const products = await this.readProducts();
+            let query = {};
+            if (category) {
+                query.category = category;
+            }
+            if (brand) {
+                query.brand = brand;
+            }
+            const options = {
+                limit: 3,
+                page: 1,
+                sort: { price: sort === 'asc' ? 1 : -1 }
+            };
+
+            const filter = await Product.paginate(query, options);
+            const products = filter.docs.map(product => product.toObject());
+
+            return products;
         } catch (error) {
             console.error("Error al obtener los productos:", error.message);
+            throw error;
         }
     };
 
