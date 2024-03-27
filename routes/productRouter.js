@@ -52,16 +52,35 @@ const productManager = new ProductManager();
 
 productRouter.get("/", async (req, res) => {
     try {
-        const  limit  = req.query.limit || 5;
-        const page =  req.query.page || 1;
-        const products = await Product.paginate({}, {limit, page});
+        const limit = parseInt(req.query.limit) || 4;
+        const page = parseInt(req.query.page) || 1;
+        const brand = req.query.brand;
+
+        let query = {};
+        if (brand) {
+            query.brand = brand;
+        }
+
+        const options = {
+            limit,
+            page,
+            lean: true
+        };
+
+        const products = await Product.paginate(query, options);
+
+        // Agregar información adicional si es necesario
+        const totalPages = Math.ceil(products.total / limit);
+        products.isValid = page >= 1 && page <= totalPages;
 
         return res.json(products);
+        
     } catch (error) {
         console.error(error);
         res.status(500).send("Error al recibir productos");
     }
 });
+
 productRouter.get("/:pid", async (req, res) => {
     try {
         const { pid } = req.params;
