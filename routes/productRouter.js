@@ -5,50 +5,6 @@ import Product from "../dao/models/product.js";
 const productRouter = express.Router();
 const productManager = new ProductManager();
 
-/*productRouter.get("/", async (req, res) => {
-    try {
-        const { limit = 10, page = 1, sort, query } = req.query;
-
-        const filter = query ? { $text: { $search: query } } : {};
-        const sortOption = sort === 'desc' ? { price: -1 } : { price: 1 };
-
-        const options = {
-            limit: parseInt(limit),
-            page: parseInt(page),
-            sort: sortOption
-        };
-
-        // Utiliza el método paginate() del modelo Product para obtener los productos paginados
-        const result = await Product.paginate(filter, options);
-
-        // Calcula la cantidad total de páginas
-        const totalPages = Math.ceil(result.totalDocs / limit);
-        
-        // Construye los enlaces de paginación
-        const prevLink = result.hasPrevPage ? `/products?limit=${limit}&page=${result.prevPage}` : null;
-        const nextLink = result.hasNextPage ? `/products?limit=${limit}&page=${result.nextPage}` : null;
-
-        // Envía la respuesta con los datos paginados
-        res.json({
-            status: 'success',
-            payload: result.docs,
-            totalPages: totalPages,
-            prevPage: result.prevPage,
-            nextPage: result.nextPage,
-            page: page,
-            hasPrevPage: result.hasPrevPage,
-            hasNextPage: result.hasNextPage,
-            prevLink: prevLink,
-            nextLink: nextLink
-        });
-        console.log(options)
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Error al recibir productos");
-    }
-});*/
-
-//otro metodo get
 
 productRouter.get("/", async (req, res) => {
     try {
@@ -69,7 +25,6 @@ productRouter.get("/", async (req, res) => {
 
         const products = await Product.paginate(query, options);
 
-        // Agregar información adicional si es necesario
         const totalPages = Math.ceil(products.total / limit);
         products.isValid = page >= 1 && page <= totalPages;
 

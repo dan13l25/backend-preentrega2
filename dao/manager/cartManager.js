@@ -7,14 +7,32 @@ export default class CartManager {
     }
 
     async getCartById(cartId) {
-        try {
-            const cart = await cartsModel.findById(cartId).populate('products.product');
-            return cart;
-        } catch (error) {
-            console.error("Error al obtener el carrito:", error.message);
-            return null;
-        }
+    try {
+        const cart = await cartsModel.findById(cartId).lean();
+        return cart;
+    } catch (error) {
+        console.error("Error al obtener el carrito:", error.message);
+        return null;
     }
+}
+/*
+getCartById: async (req, res) => {
+    const cartId = req.params.cid;
+
+    try {
+      // Intentar encontrar el carrito en la base de datos por su ID
+      const cart = await Cart.findById(cartId);
+
+      if (!cart) {
+        return res.status(404).json({ error: "Carrito no encontrado" });
+      }
+
+      return res.json(cart);
+    } catch (error) {
+      console.error("Error al obtener el carrito por ID:", error);
+      return res.status(500).json({ error: "Error en la base de datos", details: error.message });
+    }
+*/
 
     async createCart() {
         try {

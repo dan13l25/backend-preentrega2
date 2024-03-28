@@ -11,14 +11,14 @@ cartRouter.post("/", async (req, res) => {
         const newCart = await cartManagerInstance.createCart();
         res.json(newCart);
     } catch (error) {
-        res.send("Error al crear carrito");
+        console.error("Error al obtener el carrito:", error.message);
     }
 });
 
 cartRouter.get("/:cid", async (req, res) => {
     const { cid } = req.params;
     try {
-        const cart = await cartsModel.findById(cid).populate('products.product'); 
+        const cart = await cartsModel.findById(cid); 
         if (!cart) {
             return res.status(404).send("Carrito no encontrado");
         }
