@@ -1,4 +1,7 @@
 import Product from "../models/product.js";
+import io from 'socket.io-client'; // Cambié 'socket' a 'io' para evitar conflicto de nombres
+
+const socket = io(); // Aquí está la declaración del socket
 
 export default class ProductManager {
     constructor() {
@@ -19,8 +22,11 @@ export default class ProductManager {
                 category,
                 brand
             });
-
+    
             await product.save();
+    
+            // Emitir evento de socket para notificar el nuevo producto
+            socket.emit('newProduct', product);
         } catch (error) {
             console.error("Error al añadir el producto:", error.message);
         }

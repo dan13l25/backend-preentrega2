@@ -8,33 +8,35 @@
         </div>
     {{/each}}-->
 
+<!---->
 {{#if isValid}}
-<h2>Lista de productos</h2>
-<hr>
-<div>
-    {{#each Product}}
-     <div>
-            <h2>{{title}}</h2>
-            <p>Description: {{this.description}}</p>
-            <p>Price: ${{this.price}}</p>
-        </div>
+    <h2>Lista de productos</h2>
+    <hr>
+    <div>
+        {{#each products}}
+            <div>
+                <h2>{{title}}</h2>
+                <p>Description: {{description}}</p>
+                <p>Price: ${{price}}</p>
+            </div>
+            <br/>
+        {{/each}}
+    </div>
     <br/>
-    {{/each}}
-</div>
-<br/>
-<hr>
-<div>
-    {{#if hasPrevPage}}
-        <a href={{this.prevLink}}><< Anterior</a>
-    {{/if}}
-    &nbsp;
-    {{this.page}}
-    &nbsp;
-     {{#if hasNextPage}}
-        <a href={{this.nextLink}}>Siguiente >></a>
-    {{/if}} 
-</div>
+    <hr>
+    <div>
+        {{#if hasPrevPage}}
+            <a href={{this.prevLink}}><< Anterior</a>
+        {{/if}}
+        &nbsp;
+        {{this.page}}
+        &nbsp;
+        {{#if hasNextPage}}
+            <a href={{this.nextLink}}>Siguiente >></a>
+        {{/if}} 
+    </div>
 {{else}}
-<h2>No hay productos para mostrar</h2>
+    <h2>No hay productos para mostrar</h2>
 {{/if}}
 
+<script src="/socket.io/socket.io.js"></script>

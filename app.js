@@ -62,6 +62,10 @@ io.on("connection", (socket) => {
             console.error("Error al guardar el mensaje:", error);
         }
     });
+    socket.on('newProduct', (product) => {
+        // Renderizar la vista product.hbs nuevamente con los nuevos productos
+        res.render('product', { products: [product, ...products] });
+    });
 });
 
 
