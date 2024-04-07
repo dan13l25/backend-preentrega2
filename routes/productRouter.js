@@ -26,7 +26,10 @@ productRouter.get("/", async (req, res) => {
         const products = await Product.paginate(query, options);
 
         const totalPages = Math.ceil(products.total / limit);
-        products.isValid = page >= 1 && page <= totalPages;
+        const isValid = page >= 1 && page <= totalPages;
+
+        // Agregar la propiedad isValid al objeto de respuesta
+        products.isValid = isValid;
 
         return res.json(products);
         

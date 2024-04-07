@@ -1,7 +1,4 @@
 import Product from "../models/product.js";
-import io from 'socket.io-client'; // Cambié 'socket' a 'io' para evitar conflicto de nombres
-
-const socket = io(); // Aquí está la declaración del socket
 
 export default class ProductManager {
     constructor() {
@@ -26,7 +23,7 @@ export default class ProductManager {
             await product.save();
     
             // Emitir evento de socket para notificar el nuevo producto
-            socket.emit('newProduct', product);
+            io.emit('newProduct', product);
         } catch (error) {
             console.error("Error al añadir el producto:", error.message);
         }
@@ -57,10 +54,10 @@ export default class ProductManager {
                 sort: { price: sort === 'asc' ? 1 : -1 }
             };
 
-            const filter = await Product.paginate(query, options);
+            const filter = await Product.paginate(query, options).lean();
             const products = filter.docs.map(product => product.toObject());
 
-            return products;
+            return products.lean();
         } catch (error) {
             console.error("Error al obtener los productos:", error.message);
             throw error;
